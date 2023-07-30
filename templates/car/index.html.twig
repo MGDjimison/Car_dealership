@@ -3,43 +3,40 @@
 {% block title %}Car index{% endblock %}
 
 {% block body %}
-    <h1>Car index</h1>
-
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>NbSeats</th>
-                <th>NbDoors</th>
-                <th>Name</th>
-                <th>Cost</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for car in cars %}
-            <tr>
-                <td>{{ car.id }}</td>
-                <td>{{ car.nbSeats }}</td>
-                <td>{{ car.nbDoors }}</td>
-                <td>{{ car.name }}</td>
-                <td>{{ car.cost }}</td>
-                <td>
-                    <a href="{{ path('app_car_show', {'id': car.id}) }}">show</a>
-                    <a href="{{ path('app_car_edit', {'id': car.id}) }}">edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="6">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-
-    <div class="navigation">
-        {{ knp_pagination_render(cars) }}
+    <div class="container">
+        <h1 class="text-center">Car index</h1>
+        <div class="row">
+            {% if form %}
+                <div class="col-sm-3">
+                    {{ form_start(form, {attr: {class: 'filter js-filter-form'}}) }}
+                        {{ form_row(form.q) }}
+                        <h4>Catégories</h4>
+                        {{ form_row(form.categories) }}
+                        <button class="btn btn-primary btn-sm">Rechercher</button>
+                    {{ form_end(form) }}
+                </div>
+            {% endif %}
+            <div class="col-lg-9">
+                {% for car in cars %}
+                    <div class="card">
+                        <div class="card-header">
+                            {{ car.cost }} €
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title">{{ car.name }}</h5>
+                            <a href="{{ path('app_car_edit', {id : car.id}) }}" class="card-link">Modifier</a>
+                            <a href="{{ path('app_car_delete', {id : car.id}) }}" class="card-link">Supprimer</a>
+                        </div>
+                    </div>
+                    <br>
+                {% endfor %}
+                <div class="navigation">
+                    {{ knp_pagination_render(cars) }}
+                </div>
+                <a href="{{ path('app_car_new') }}">Create new</a>
+            </div>
+        </div>
     </div>
 
-    <a href="{{ path('app_car_new') }}">Create new</a>
+
 {% endblock %}
